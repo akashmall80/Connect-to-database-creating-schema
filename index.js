@@ -74,18 +74,27 @@ app.post('/create-contact', function (req, res) {
     })
 })
 
-app.get('/delete-contact/', function (req, res) {
+app.get('/delete-contact', function (req, res) {
     // console.log(req.query);
     //{phone:123}
-    let phone = req.query.phone;
+    //get the id from query in the url
+
+    let id =  req.query.id;
+    console.log(id);
+    Contact.findByIdAndDelete(id).then((data)=>{
+       console.log("deleted");
+       return res.redirect("back");
+    })
+    .catch((err)=>{
+        console.log('err in deleting obejct')
+        return;
+    })
+
+    //find the contact in the database using id and delete it
     //params are  /user/10
     //query are /user/?phone=10
-    let contactIndex = contactList.findIndex(contact => contact.phone == phone);
-
-    if (contactIndex != -1) {
-        contactList.splice(contactIndex, 1);
-    }
-    return res.redirect('back');
+    
+    
     //123
 
 })
