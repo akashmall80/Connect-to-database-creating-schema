@@ -35,10 +35,16 @@ var contactList = [{
 
 app.get('/', function (req, res) {
     //returning index.ejs file feom view folder
-    return res.render("index", {
-        title: "my contacts-list",
-        contact_List: contactList
-    });
+    Contact.find({}).then((data)=>{
+        return res.render("index", {
+            title: "my contacts-list",
+            contact_List: data
+        });
+    })
+    .catch(err=>{
+        console.log("error in finding")
+    })
+    
 })
 
 app.get('/practice', function (req, res) {
