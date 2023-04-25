@@ -3,8 +3,8 @@ const express = require('express');
 //used in 11 line path.join
 const path = require('path');
 const port = 8000;
-const db=require('./config/mongoose');
-const contact = require('./model/contact') 
+const db = require('./config/mongoose');
+const Contact = require('./model/contact')
 
 const app = express();
 
@@ -37,7 +37,7 @@ app.get('/', function (req, res) {
     //returning index.ejs file feom view folder
     return res.render("index", {
         title: "my contacts-list",
-        contact_List:contactList
+        contact_List: contactList
     });
 })
 
@@ -46,33 +46,38 @@ app.get('/practice', function (req, res) {
     return res.send('<h1>Practice</h1>')
 })
 
-app.post('/create-contact',function(req,res){
+app.post('/create-contact', function (req, res) {
     // return res.redirect('/practice')
     //when data is send from form to server it is encoded and its string to decode and convert it to object we need parser
     ////parser middleware
-//app.use(express.urlencoded()); due to this
+    //app.use(express.urlencoded()); due to this
     // console.log(req.body);
     // contactList.push({
     //     name:req.body.name,
     //     phone:req.body.phone
     // });
 
-    contactList.push(req.body);
+    // contactList.push(req.body);
 
-    return res.redirect('back');
+    Contact.create({
+        name: req.body.name,
+        phone: req.body.phone
+    }).then((data) => {
+        console.log("********", data)
+        return res.redirect("back");
+    })
 })
 
-app.get('/delete-contact/',function(req,res){
+app.get('/delete-contact/', function (req, res) {
     // console.log(req.query);
     //{phone:123}
-   let phone = req.query.phone;
+    let phone = req.query.phone;
     //params are  /user/10
     //query are /user/?phone=10
     let contactIndex = contactList.findIndex(contact => contact.phone == phone);
 
-    if(contactIndex!= -1)
-    {
-        contactList.splice(contactIndex,1);
+    if (contactIndex != -1) {
+        contactList.splice(contactIndex, 1);
     }
     return res.redirect('back');
     //123
